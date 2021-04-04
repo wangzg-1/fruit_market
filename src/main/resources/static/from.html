@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/layui.css"  media="all">
+</head>
+<style>
+    .quan{
+        width: 500px;
+        height: 500px;
+        margin-top: 20px;
+        margin-left: 20px;
+    }
+</style>
+<body>
+<div class="quan">
+<form class="layui-form" action="">
+    <div class="layui-form-item">
+        <label class="layui-form-label">分类名字</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" required  lay-verify="required" placeholder="请输入分类名字" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">父类ID</label>
+        <div class="layui-input-block">
+            <input type="text" name="parentId" required  lay-verify="required" placeholder="请输入父类ID" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">分类类型</label>
+        <div class="layui-input-block">
+            <input type="text" name="type" required  lay-verify="required" placeholder="请输入分类类型" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+</div>
+<script>
+    //Demo
+    layui.use('form', function(){
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+            layer.msg(JSON.stringify(data.field));
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

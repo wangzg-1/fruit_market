@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <link rel="shortcut icon" href="#" />
+    <link rel="stylesheet" href="layui/css/layui.css" media="all">
+</head>
+
+<body>
+
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+
+    <div class="layui-row" id="popUpdateTest" style="display:none; margin-top: -300px;margin-bottom: 100px;">
+        <div class="layui-col-md10">
+            <form class="layui-form" lay-filter="formTestFilter" id="addAndUpdateEmployeeForm">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">名字</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" class="layui-input kkk" id="username" value="" onchange="changeValue(this)" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">分类上级</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="parentId" class="layui-input" id="parentId">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">类型</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="type" class="layui-input" id="type">
+                    </div>
+                </div>
+                <!--<div class="layui-form-item">-->
+                <!--<label class="layui-form-label">备注：</label>-->
+                <!--<div class="layui-input-block">-->
+                <!--<textarea placeholder="请输入内容" class="layui-textarea" name="userDescription" style="width: 83%"></textarea>-->
+                <!--</div>-->
+                <!--</div>-->
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button type="button" id="updateRole" class="layui-btn layui-btn-normal" lay-filter="updateadmin">提交</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <a class="layui-btn layui-btn-xs" href="/addproductCategory">添加</a>
+            <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+            <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
+            <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+        </div>
+    </script>
+
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+
+    <script type="text/html" id="img">
+        <!-- 这里的 checked 的状态只是演示 -->
+        <img src="images/{{d.fileName}}">
+    </script>
+
+    <script src="layui/layui.js" charset="utf-8"></script>
+    <script src="js/jquery-1.8.3.min.js" charset="utf-8"></script>
+    <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+
+    <script>
+        // layui.use('table', function () {
+        //     var $=layui.jquery;
+        //     var table = layui.table;
+        //     //监听单元格编辑
+        // 	console.log(1);
+        //     table.on('edit(test)', function (obj) {
+        //         var value = obj.value //得到修改后的值,
+        //             , data = obj.data //得到所在行所有键值
+        //             , field = obj.field; //得到字段
+        //         console.log(obj);
+        //         console.log(2);
+        //         // layer.msg(title)
+        //         $.ajax({
+        //
+        //             url:"/productCategory/update",
+        //             data:{id:data.id
+        // 				,name:value.name
+        // 				,parentId:value.parentId
+        // 				,type:value.type
+        // 			},
+        //             type:"post",
+        //             dataType:"json",
+        //             success: function (result) {
+        //                 console.log(3);
+        //                 layer.msg('[ID: ' + data.id + '] ' + title + ' 字段更改为：' + value);
+        //                 //location.reload();
+        //             }
+        //         })
+        //     });
+        // });
+
+        function changeValue(obj) {
+            $(obj).attr("value", $(obj).val());
+        }
+
+        layui.use(['table', 'form'], function() {
+            var table = layui.table;
+            var popForm = layui.form;
+            table.render({
+                elem: '#test',
+                url: '/productCategory/findAllTableProductCategory',
+                toolbar: '#toolbarDemo',
+                id: 'elementID',
+                title: '分类数据表',
+                totalRow: true,
+                cols: [
+                    [{
+                        type: 'checkbox',
+                        fixed: 'left'
+                    }, {
+                        field: 'id',
+                        title: 'ID',
+                        width: 80,
+                        sort: true
+                    }, {
+                        field: 'name',
+                        title: '分类名',
+                        width: 120,
+                        edit: 'text'
+                    }, {
+                        field: 'parentId',
+                        title: '分类上级',
+                        width: 150
+                    }, {
+                        field: 'type',
+                        title: '类型',
+                        width: 150
+                    }, {
+                        fixed: 'right',
+                        title: '操作',
+                        toolbar: '#barDemo',
+                        width: 150
+                    }]
+                ],
+                page: true
+            });
+
+            // popForm.on('submit(updateadmin)',function (data) {
+            //     console.log(66666);
+            //     var field =data.field;
+            //     console.log(field);
+            //     console.log(data);
+            // });
+
+            //工具栏事件
+            table.on('toolbar(test)', function(obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'getCheckData':
+                        var data = checkStatus.data;
+                        layer.alert(JSON.stringify(data));
+                        break;
+                    case 'getCheckLength':
+                        var data = checkStatus.data;
+                        layer.msg('选中了：' + data.length + ' 个');
+                        break;
+                    case 'isAll':
+                        layer.msg(checkStatus.isAll ? '全选' : '未全选')
+                        break;
+                };
+            });
+
+            table.on('tool(test)', function(obj) {
+                var data = obj.data;
+                console.log(data);
+                if (obj.event === 'detail') {
+                    layer.msg('ID：' + data.id + ' 的查看操作');
+                } else if (obj.event === 'del') {
+                    layer.confirm('真的删除行么', function(index) {
+                        obj.del();
+                        layer.close(index);
+                        console.log(obj);
+                        var id = data.id; //向服务端发送删除指令
+                        $.ajax({
+                            url: "/productCategory/del",
+                            type: "post",
+                            contentType: "application/json",
+                            data: JSON.stringify(id),
+                            success: function(data) {
+                                window.location.reload(true);
+                            }
+                        });
+                    })
+                } else if (obj.event === 'edit') {
+                    layer.prompt({
+                        formType: 2
+                        ,name: data.name
+                        ,parentId:data.parentId
+                        ,type:data.type
+                    });
+                        obj.update({
+                            name: name,
+                            parentId: parentId,
+                            type:type
+                        });
+                        layer.close(index);
+
+                    // layer.open({
+                    //     type: 1,
+                    //     //skin:'layui-layer-rim',设置边框
+                    //     title: "修改角色信息",
+                    //     area: ['35%', '370px'],
+                    //     content: $("#popUpdateTest").html(),
+                    //     offset: '50px' //设置弹出层在距离顶部，100px 水平居中
+                    // });
+                    // setFormValue(data)
+                }
+                //动态向表单赋值
+                // function setFormValue(data) {
+                //     popForm.val("formTestFilter", {
+                //         "name": data.name,
+                //         "parentId": data.parentId,
+                //         "type": data.type
+                //     });
+                //     popForm.render(null, 'formTestFilter')
+                // }
+
+                // $('body').on('click', '#updateRole', function() {
+                //
+                //     var username = $(".kkk").val();
+                //     var productcategoryparentId = $("#parentId").val();
+                //     var productcategorytype = $("#type").val();
+                //     console.log($(".kkk").val());
+                //     console.log(productcategoryparentId);
+                //     console.log(productcategorytype);
+                //     layer.msg('hello');
+                //     var str = {
+                //         id: data.id,
+                //         name: username,
+                //         parentId: productcategoryparentId,
+                //         type: productcategorytype
+                //     };
+                //     console.log(JSON.stringify(str));
+                //     $.ajax({
+                //         url: "/productCategory/update",
+                //         contentType: "application/json",
+                //         data: JSON.stringify(str),
+                //         type: "post",
+                //         success: function(result) {
+                //             console.log(3);
+                //             // layer.msg('[ID: ' + data.id + '] ' + title + ' 字段更改为：' + value);
+                //             //location.reload();
+                //         }
+                //     })
+                // });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

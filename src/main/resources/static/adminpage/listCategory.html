@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head th:include="adminpage/adminHeader::html('分类管理')" >
+</head>
+<body>
+    <div id="wrapper">
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li class="nav-header">
+                        <div class="dropdown profile-element"> <span>
+                            <img alt="image" class="img-circle" th:src="@{/admin/img/cat.jpg}" />
+                             </span>
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+                                <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">admin</strong>
+                             </span>  <span class="text-muted text-xs block">管理员</span> </span>
+                            </a>
+                        </div>
+                    </li>
+                    <li>
+                        <a th:href="@{/business/index}"><i class="fa fa-flask"></i> <span class="nav-label">后台首页</span></a>
+                    </li>
+                    <li class="active">
+                        <a th:href="@{/business/category/listPager}"><i class="fa fa-flask"></i> <span class="nav-label">分类管理</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/business/product/listPager}"><i class="fa fa-flask"></i> <span class="nav-label">商品管理</span></a>
+                    </li>
+                    <li >
+                        <a th:href="@{/business/user/listPager}"><i class="fa fa-flask"></i> <span class="nav-label">用户管理</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/business/order/listPager}"><i class="fa fa-flask"></i> <span class="nav-label">订单管理</span></a>
+                    </li>
+                </ul>
+
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="gray-bg dashbard-1">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                    <div class="navbar-header">
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="table_basic.html#"><i class="fa fa-bars"></i> </a>
+<!--                        <form role="search" class="navbar-form-custom" method="post" action="search_results.html">-->
+<!--                            <div class="form-group">-->
+<!--                                <input type="text" placeholder="请输入您需要查找的内容 …" class="form-control" name="top-search" id="top-search">-->
+<!--                            </div>-->
+<!--                        </form>-->
+                    </div>
+                    <ul class="nav navbar-top-links navbar-right">
+                        <li>
+                            <a th:href="@{/business/loginout}">
+                                <i class="fa fa-sign-out"></i> 退出
+                            </a>
+                        </li>
+                    </ul>
+
+                </nav>
+            </div>
+            <div class="wrapper wrapper-content animated fadeInRight">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>分类管理</h5>
+
+                                <div class="ibox-tools">
+                                    <a class="collapse-link">
+                                        <i class="fa fa-chevron-up"></i>
+                                    </a>
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="table_basic.html#">
+                                        <i class="fa fa-wrench"></i>
+                                    </a>
+                                    <a class="close-link">
+                                        <i class="fa fa-times"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="ibox-content">
+                                <div class="row">
+                                    <div class="col-lg-9">
+                                        <a href="/business/category/toAdd" class="btn btn-w-m btn-primary">新增</a>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <form th:action="@{/business/category/search}" method="post" role="form">
+                                            <div class="form-group">
+                                                <label>搜索</label>
+                                                <input type="text" placeholder="请输入名称" name="name" class="form-control">
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>姓名</th>
+                                            <th>父类ID</th>
+                                            <th>类型</th>
+                                            <th>编辑</th>
+                                            <th>删除</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="category : ${categories}">
+                                        <td th:text="${category.id}"></td>
+                                        <td th:text="${category.name}"></td>
+                                        <td th:text="${category.parentId}"></td>
+                                        <td th:text="${category.type}"></td>
+                                            <td style="width: 100px"><a th:href="@{'/business/category/toEdit?id='+${category.id}}" class="btn btn-w-m btn-info">修改</a></td>
+                                            <td style="width: 100px"><a th:href="@{'/business/category/del/'+${category.id}}" class="btn btn-w-m btn-danger">删除</a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
